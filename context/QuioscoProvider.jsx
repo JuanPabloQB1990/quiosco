@@ -32,8 +32,10 @@ const QuioscoProvider = ({ children }) => {
 
   useEffect(() => {
     if (pedido.length > 0) {
-      
-      const nuevoTotal = pedido.reduce((total, producto) => (producto.precio * producto.cantidad) +  total, 0)
+      const nuevoTotal = pedido.reduce(
+        (total, producto) => producto.precio * producto.cantidad + total,
+        0
+      );
 
       setTotal(nuevoTotal);
     }
@@ -101,16 +103,21 @@ const QuioscoProvider = ({ children }) => {
     setPedido(pedidoModificado);
   };
 
-  const colocarOrden = async(e) => {
+  const colocarOrden = async (e) => {
     e.preventDefault();
     try {
-      const {data} = await axios.post('/api/ordenes', {pedido, nombre, total, fecha: Date.now().toString()})
+      const { data } = await axios.post("/api/ordenes", {
+        pedido,
+        nombre,
+        total,
+        fecha: Date.now().toString(),
+      });
 
       //resetear la app
-      setCategoriaActual(categorias[0])
-      setPedido([])
-      setNombre("")
-      setTotal(0)
+      setCategoriaActual(categorias[0]);
+      setPedido([]);
+      setNombre("");
+      setTotal(0);
       toast.success("Pedido realizado Correctamente!", {
         position: "top-right",
         autoClose: 5000,
@@ -124,11 +131,34 @@ const QuioscoProvider = ({ children }) => {
       });
 
       setTimeout(() => {
-        router.push('/')
+        router.push("/");
       }, 2000);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const completarOrden = async (id) => {
+    try {
+      const res = await axios.post(`/api/ordenes/${id}`);
+      const data = res.json();
+      console.log(data);
+      toast.success("Orden lista", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+
+    } catch (error) {
+      console.log(error);
+    }
+
   };
 
   return (
@@ -150,6 +180,7 @@ const QuioscoProvider = ({ children }) => {
         setNombre,
         colocarOrden,
         total,
+        completarOrden,
       }}
     >
       {children}

@@ -1,10 +1,14 @@
 import Image from 'next/image';
 import React from 'react'
+import useQuiosco from "../hooks/useQuiosco";
+import { formatearDinero } from '../helpers';
 
 const Orden = ({orden}) => {
-    console.log(orden);
-
+    
     const { id, nombre, total, pedido } = orden
+
+    const { completarOrden } = useQuiosco();
+    
 
   return (
     <div className='border p-10 space-y-5'>
@@ -22,6 +26,14 @@ const Orden = ({orden}) => {
                 </div>
             </div>
         ))}
+      </div>
+      <div className='md:flex md:items-center md:justify-between my-10'>
+          <p className='mt-5 font-black text-4xl text-amber-500'>
+              Total a Pagar: {formatearDinero(total)}
+          </p>
+          <button type='button' onClick={() => completarOrden(id)} className='bg-indigo-600 hover:bg-indigo-800 text-white mt-05 md:mt-0 py-3 px-10 uppercase font-bold rounded-lg'>
+            Completar Orden
+          </button>
       </div>
     </div>
   )

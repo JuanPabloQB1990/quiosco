@@ -9,7 +9,7 @@ const admin = () => {
       return axios('/api/ordenes').then(datos => datos.data)
     }
     
-    const { data, error, isLoading } = useSWR('/api/ordenes', fetcher)
+    const { data, error, isLoading } = useSWR('/api/ordenes', fetcher, { refreshInterval: 100})
 
 
   return (

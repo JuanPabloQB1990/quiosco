@@ -23,7 +23,7 @@ const ResumenPedido = ({ producto }) => {
           Precio: {formatearDinero(producto.precio)}
         </p>
         <p className="text-sm font-bold mt-2 text-gray-700">
-          Subtotal: {formatearDinero(producto.precio) * producto.cantidad}
+          Subtotal: {formatearDinero(producto.precio * producto.cantidad) }
         </p>
       </div>
       <div>
