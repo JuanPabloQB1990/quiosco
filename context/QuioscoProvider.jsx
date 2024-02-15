@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { createContext, useEffect, useState } from "react";
 import { Bounce, toast } from "react-toastify";
+import useSWR from "swr";
 
 export const QuioscoContext = createContext();
 
@@ -14,6 +15,7 @@ const QuioscoProvider = ({ children }) => {
   const [edicion, setEdicion] = useState(false);
   const [nombre, setNombre] = useState("");
   const [total, setTotal] = useState(0);
+  const [ordenes, setOrdenes] = useState([]);
 
   const router = useRouter();
 
@@ -141,8 +143,6 @@ const QuioscoProvider = ({ children }) => {
   const completarOrden = async (id) => {
     try {
       const res = await axios.post(`/api/ordenes/${id}`);
-      const data = res.json();
-      console.log(data);
       toast.success("Orden lista", {
         position: "top-right",
         autoClose: 5000,
@@ -154,12 +154,22 @@ const QuioscoProvider = ({ children }) => {
         theme: "light",
         transition: Bounce,
       });
-
     } catch (error) {
       console.log(error);
     }
-
   };
+
+  const fetcher = async () => {
+    return axios("/api/ordenes").then((datos) => datos.data);
+  };
+
+  const { data, error, isLoading } = useSWR("/api/ordenes", fetcher, {
+    refreshInterval: 100,
+  });
+
+  useEffect(() => {
+    setOrdenes(data);
+  }, [fetcher]);
 
   return (
     <QuioscoContext.Provider
@@ -181,6 +191,7 @@ const QuioscoProvider = ({ children }) => {
         colocarOrden,
         total,
         completarOrden,
+        ordenes,
       }}
     >
       {children}
