@@ -1,10 +1,9 @@
 import AdminLayout from "../layout/AdminLayout";
 import Orden from "../components/Orden";
 import useQuiosco from "../hooks/useQuiosco";
-import { useEffect } from "react";
 
-const admin = () => {
-  const { obtenerOrdenes, ordenes } = useQuiosco();
+const Admin = () => {
+  const { ordenes } = useQuiosco();
 
 
 
@@ -21,4 +20,4 @@ const admin = () => {
   );
 };
 
-export default admin;
+export default Admin;
